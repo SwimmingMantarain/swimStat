@@ -16,6 +16,7 @@ def home():
 def account():
     return render_template("account.html", user=current_user)
 
+"""
 @views.route("/delete-note", methods=["POST"])
 def delete_note():
     note = json.loads(request.data)
@@ -26,7 +27,7 @@ def delete_note():
             db.session.delete(note)
             db.session.commit()
             flash("Note deleted", category="success")
-    return jsonify({})
+    return jsonify({})"""
 
 @views.route("/delete-account", methods=["POST", "GET"])
 @login_required

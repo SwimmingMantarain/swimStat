@@ -14,9 +14,21 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/base.css') }}"
     />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='media/images/apple-touch-icon.png')}}">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='media/images/android-chrome-192x192.png')}}">
-    <link rel="manifest" href="{{ url_for('static', filename='media/files/site.webmanifest')}}">
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{ url_for('static', filename='media/images/apple-touch-icon.png')}}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="{{ url_for('static', filename='media/images/android-chrome-192x192.png')}}"
+    />
+    <link
+      rel="manifest"
+      href="{{ url_for('static', filename='media/files/site.webmanifest')}}"
+    />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -68,36 +80,33 @@
       </div>
     </nav>
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %} {% for category, message in messages %} {% if category ==
-      "error" %}
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button
-          type="button"
-          class="close"
-          data-dismiss="alert"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      {% else %}
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button
-          type="button"
-          class="close"
-          data-dismiss="alert"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    {% endif %} {% endfor %} {% endif %} {% endwith %} 
-    <div class="container">
-      {% block content %} {%
-        endblock %}
+    messages %} {% for category, message in messages %} {% if category ==
+    "error" %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
+    {% else %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
+    <div class="container">{% block content %}{% endblock %}</div>
 
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
