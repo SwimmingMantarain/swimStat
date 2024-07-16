@@ -21,7 +21,7 @@ def home():
             flash("Note added", category="success")
     return render_template("home.html", user=current_user)
 
-@views.route("/account", methods=["GET"])
+@views.route("/account", methods=["GET", "POST"])
 @login_required
 def account():
     return render_template("account.html", user=current_user)
