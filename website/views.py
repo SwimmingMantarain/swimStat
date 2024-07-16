@@ -21,10 +21,10 @@ def home():
             flash("Note added", category="success")
     return render_template("home.html", user=current_user)
 
-@views.route("/account", methods=["GET", "POST"])
+@views.route("/account", methods=["GET"])
 @login_required
 def account():
-    return render_template("account.html")
+    return render_template("account.html", user=current_user)
 
 @views.route("/delete-note", methods=["POST"])
 def delete_note():

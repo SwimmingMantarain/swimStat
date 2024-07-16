@@ -1,0 +1,58 @@
+/* home.css */
+.card-container {
+    perspective: 2000px; /* Perspective for 3D effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card3d {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    transform-style: preserve-3d; /* Preserve 3D transform */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flip-button {
+    background-color: #007bff;
+    color: #fff;
+    border: 2px solid #000000; /* Button border */
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Button shadow */
+    transition: transform 0.5s, box-shadow 0.5s;
+}
+
+.flip-button:hover {
+    transform: translateY(-15px); /* Lift off effect on hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.7); /* Enhanced shadow on hover */
+}
+
+.flip-button.flip {
+    animation: flipAnimation 0.5s;
+}
+
+@keyframes flipAnimation {
+    0% {
+        transform: rotateX(0deg);
+    }
+    50% {
+        transform: rotateX(180deg);
+    }
+    99% {
+        transform: rotateX(359deg);
+    }
+    100% {
+        transform:rotateX(0deg)
+    }
+}

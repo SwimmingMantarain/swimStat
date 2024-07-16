@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block title %}Account - SwimStats{% endblock %} {%
+block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/account.css')}}"
+/>
+<div class="card mb-4">
+  <div class="card-header" align="center">Account Settings</div>
+  <div class="card-body" align="center">
+    <h1>Delete Account</h1>
+    <a href="#" class="btn btn-primary caution">Delete</a>
+  </div>
+</div>
+{% endblock %}
