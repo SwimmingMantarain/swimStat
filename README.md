@@ -1,1 +1,1 @@
-# swimStat
+# swimStats
