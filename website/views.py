@@ -11,10 +11,10 @@ views = Blueprint("views", __name__)
 def home():
     return render_template("home.html", user=current_user)
 
-@views.route("/account", methods=["GET", "POST"])
+@views.route("/settings", methods=["GET", "POST"])
 @login_required
-def account():
-    return render_template("account.html", user=current_user.id)
+def settings():
+    return render_template("settings.html", user=current_user.id)
 
 @views.route("/delete-account", methods=["POST", "GET"])
 def delete_account():
