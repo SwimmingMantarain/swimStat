@@ -1,5 +1,5 @@
-function deleteAccount(user) {
-    fetch("/delete-account", {
+async function deleteAccount(user) {
+    const response = await fetch("/delete-account", {
         method: "POST",
         body: JSON.stringify({ user: user })
     }).then((_res) => {
