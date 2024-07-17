@@ -24,7 +24,7 @@ def create_app():
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(training, url_prefix="/")
 
-    from .models import User, Session, Block
+    from .models import User
 
     create_database(app)
 
