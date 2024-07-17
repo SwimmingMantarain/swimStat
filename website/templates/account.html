@@ -8,8 +8,9 @@ block content %}
   <div class="card-header" align="center">Account Settings</div>
   <div class="card-body" align="center">
     <h1>Delete Account</h1>
-    <a class="btn btn-primary caution" onClick="deleteAccount({{user}})">Delete</a>
+    <a class="btn btn-primary caution" onClick="deleteAccount({{user}})"
+      >Delete</a
+    >
   </div>
 </div>
-<script src="{{ url_for('static', filename='js/account.js')}}"></script>
 {% endblock %}

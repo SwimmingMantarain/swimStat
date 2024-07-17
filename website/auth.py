@@ -23,7 +23,6 @@ def login():
         else:
             flash("Incorrect email, email isn't registered.", category="error")
 
-
     return render_template("login.html", user=current_user)
 
 @auth.route("/logout")

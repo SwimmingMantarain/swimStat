@@ -36,5 +36,3 @@ def create_database(app):
     if not path.exists("website/" + DB_NAME):
         with app.app_context():
             db.create_all()
-        print("Created Database!")
-    print("Database already exists")
