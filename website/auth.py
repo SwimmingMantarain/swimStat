@@ -33,6 +33,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash("Logged Out", category="success")
     return redirect(url_for("auth.login"))
 
 @auth.route("/sign-up",  methods=["GET", "POST"])
