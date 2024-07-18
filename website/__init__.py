@@ -25,7 +25,6 @@ def create_app():
     app.register_blueprint(training, url_prefix="/")
 
     from .models import User, Block, BlockOfBlocks, TrainingSession
-
     create_database(app)
 
     @login_manager.user_loader
