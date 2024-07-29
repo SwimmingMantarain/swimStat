@@ -1,8 +1,3 @@
-instance/database.db
-website/__pycache__/__init__.cpython-312.pyc
-website/__pycache__/auth.cpython-312.pyc
-website/__pycache__/models.cpython-312.pyc
-website/__pycache__/views.cpython-312.pyc
-sync.sh
+database.db
 venv
-website/__pycache__/training.cpython-312.pyc
+__pycache__
