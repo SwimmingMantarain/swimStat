@@ -5,10 +5,12 @@ class Block(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     distance = db.Column(db.Integer)
     repeatCount = db.Column(db.Integer)
+    stroke = db.Column(db.String(15))
+    exercise = db.Column(db.String(200))
 
 class BlockOfBlocks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    blocks = db.relationship("Block", backref="blockOfBlocks", lazy=True)
+    blocks = db.ForeignKey()
     isSet = db.Column(db.Boolean)
 
 class TrainingSession(db.Model):

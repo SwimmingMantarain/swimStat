@@ -9,14 +9,14 @@ training = Blueprint("training", __name__)
 @training.route("/add-session")
 @login_required
 def add_session():
-    return "<h1>Add Session</h1>"
+    return render_template("add_session.html")
 
 @training.route("/edit-session")
 @login_required
 def edit_session():
-    return "<h1>Edit Session</h1>"
+    return render_template("edit_session.html")
 
 @training.route("/delete-session")
 @login_required
 def delete_session():
-    return "<h1>Delete Session</h1>"
+    return render_template("delete_session.html")

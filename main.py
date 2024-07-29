@@ -1,6 +1,5 @@
 import sys
 from website import create_app
-
 app = create_app()
 
 if "--ignore-errors" in sys.argv:
