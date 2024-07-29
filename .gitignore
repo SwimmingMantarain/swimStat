@@ -5,3 +5,4 @@ website/__pycache__/models.cpython-312.pyc
 website/__pycache__/views.cpython-312.pyc
 sync.sh
 venv
+website/__pycache__/training.cpython-312.pyc
