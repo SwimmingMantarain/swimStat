@@ -26,7 +26,7 @@ def create_app():
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(training, url_prefix="/")
 
-    from .models import User, Block, BlockOfBlocks, TrainingSession
+    from .models import Block, BlockOfBlocks, TrainingSession, User
     create_database(app)  # Create database if it doesn't exist
 
     @login_manager.user_loader

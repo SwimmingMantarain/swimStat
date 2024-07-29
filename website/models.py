@@ -10,14 +10,14 @@ class Block(db.Model):
 
 class BlockOfBlocks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    blocks = db.ForeignKey()
+    blocks = db.ForeignKey("Block")
     isSet = db.Column(db.Boolean)
 
 class TrainingSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    blocksOfBlocks = db.relationship("BlockOfBlocks", backref="trainingSession", lazy=True)
+    blocks = db.ForeignKey("BlockOfBlocks")
     totalDistance = db.Column(db.Integer)
-    hasSet = db.Column(db.Boolean)
+    hasSet = db.Column(db.Boolean, default=False)
     totalSetDistance = db.Column(db.Integer)
 
 class User(db.Model, UserMixin):
@@ -25,4 +25,4 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     firstName = db.Column(db.String(150))
-    trainingSessions = db.relationship("TrainingSession", backref="user", lazy=True)
+    trainingSessions = db.ForeignKey("TrainingSession")
