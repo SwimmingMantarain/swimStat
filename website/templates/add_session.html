@@ -1,10 +1,64 @@
-<!-- HTML extending base.html with an h1 tag saying "Add Session" -->
-{% extends "base.html" %}
-{% block title %}Add Session - SwimStats{% endblock %}
+{% extends "base.html" %} {% block title %}Add Session - SwimStats{% endblock %}
 {% block content %}
-<div class="card mb-4">
-    <div class="card-header">
-        Create Training Session
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/add_session.css')}}"
+/>
+<h1 class="mt-4 mb-4">Swimming Training Session Form</h1>
+<form id="swimming-session-form">
+  <div class="form-group">
+    <label for="session-name">Session Name:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="session-name"
+      name="sessionName"
+    />
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="date">Date:</label>
+      <input type="date" class="form-control" id="date" name="date" />
     </div>
-</div>
+    <div class="form-group col-md-3">
+      <label for="start-time">Start Time:</label>
+      <input
+        type="time"
+        class="form-control"
+        id="start-time"
+        name="startTime"
+      />
+    </div>
+    <div class="form-group col-md-3">
+      <label for="end-time">End Time:</label>
+      <input type="time" class="form-control" id="end-time" name="endTime" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="location">Location:</label>
+    <input type="text" class="form-control" id="location" name="location" />
+  </div>
+
+  <div class="form-group">
+    <label for="coach">Coach:</label>
+    <input type="text" class="form-control" id="coach" name="coach" />
+  </div>
+
+  <div id="sections-container">
+    <!-- Sections will be added here dynamically -->
+  </div>
+
+  <button type="button" class="btn btn-primary mb-3" onclick="addSection()">
+    Add Section
+  </button>
+
+  <button type="button" class="btn btn-success" onclick="submitForm()">
+    Submit
+  </button>
+</form>
+
+<script src="{{ url_for('static', filename='js/add_session.js') }}"></script>
+
 {% endblock %}

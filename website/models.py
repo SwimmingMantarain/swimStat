@@ -15,6 +15,7 @@ class BlockOfBlocks(db.Model):
 
 class TrainingSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150))
     blocks = db.ForeignKey("BlockOfBlocks")
     totalDistance = db.Column(db.Integer)
     hasSet = db.Column(db.Boolean, default=False)

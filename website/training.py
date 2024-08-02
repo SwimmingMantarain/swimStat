@@ -6,9 +6,11 @@ import json
 
 training = Blueprint("training", __name__)
 
-@training.route("/add-session")
+@training.route("/add-session", methods=["POST", "GET"])
 @login_required
 def add_session():
+    if request.method == "POST":
+        print(request.form.lists())
     return render_template("add_session.html", user=current_user)
 
 @training.route("/edit-session")
