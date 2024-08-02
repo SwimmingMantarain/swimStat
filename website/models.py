@@ -5,21 +5,18 @@ class Block(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     distance = db.Column(db.Integer)
     repeatCount = db.Column(db.Integer)
-    stroke = db.Column(db.String(15))
+    stroke = db.Column(db.String(30))
     exercise = db.Column(db.String(200))
 
 class BlockOfBlocks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     blocks = db.ForeignKey("Block")
-    isSet = db.Column(db.Boolean)
+    name = db.Column(db.String(150))
 
 class TrainingSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     blocks = db.ForeignKey("BlockOfBlocks")
-    totalDistance = db.Column(db.Integer)
-    hasSet = db.Column(db.Boolean, default=False)
-    totalSetDistance = db.Column(db.Integer)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
