@@ -14,6 +14,7 @@ def add_session():
         if json_data:
             print(json_data)
             sessionName = json_data["sessionName"]
+            userID = json_data["userID"]
             sections = {}
             sectionCount = 0
             for section in json_data["section-ids"]:
@@ -32,8 +33,25 @@ def add_session():
 
                 sections[section] = {"name": name, "blockCount": blockCount, "blocks": blocks}
                 sectionCount += 1
+
+            user = User.query.filter_by(id=userID).first()
+
+            for i in range(sectionCount):
+                id = f"section-{i + 1}"
+                name = sections[id]["name"]
+                blockCount = section[id]["blockCount"]
+                blocks = section[id]["blocks"]
+                for x in range(blockCount):
+                    id_ = f"block-{x + 1}"
+                    distance = blocks[id_]["distance"]
+                    repeatCount = blocks[id_]["repeatCount"]
+                    stroke = blocks[id_]["stroke"]
+                    exercise = blocks[id_]["exercise"]
+                    user.trainingSessions
+                    
+
     
-    return render_template("add_session.html", user=current_user)
+    return render_template("add_session.html", user=current_user, userID=current_user.id)
 
 @training.route("/edit-session")
 @login_required
