@@ -7,20 +7,23 @@ class Block(db.Model):
     repeatCount = db.Column(db.Integer)
     stroke = db.Column(db.String(30))
     exercise = db.Column(db.String(200))
+    block_of_blocks_id = db.Column(db.Integer, db.ForeignKey('block_of_blocks.id'), nullable=True)
 
 class BlockOfBlocks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    blocks = db.ForeignKey("Block")
     name = db.Column(db.String(150))
+    blocks = db.relationship('Block', backref='block_of_blocks', lazy=True)
+    training_session_id = db.Column(db.Integer, db.ForeignKey('training_session.id'), nullable=True)
 
 class TrainingSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
-    blocks = db.ForeignKey("BlockOfBlocks")
+    blocks = db.relationship('BlockOfBlocks', backref='training_session', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     firstName = db.Column(db.String(150))
-    trainingSessions = db.ForeignKey("TrainingSession")
+    training_sessions = db.relationship('TrainingSession', backref='user', lazy=True)
