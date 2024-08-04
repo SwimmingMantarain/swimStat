@@ -1,10 +1,11 @@
 let sectionCounter = 0;
 
 function addSection() {
-    sectionCounter++;
-    const sectionId = `section-${sectionCounter}`;
+  console.log("sdfsdfsdfsdfsdf")
+  sectionCounter++;
+  const sectionId = `section-${sectionCounter}`;
 
-    const sectionHTML = `
+  const sectionHTML = `
     <fieldset id="${sectionId}" class="border p-3 mb-4">
       <legend>Section ${sectionCounter}</legend>
       <input type="hidden" name="section-ids" value="${sectionId}">
@@ -21,15 +22,15 @@ function addSection() {
     </fieldset>
   `;
 
-    document.getElementById('sections-container').insertAdjacentHTML('beforeend', sectionHTML);
+  document.getElementById('sections-container').insertAdjacentHTML('beforeend', sectionHTML);
 }
 
 function addBlock(sectionId) {
-    const sectionElement = document.getElementById(sectionId);
-    const blocksContainer = sectionElement.querySelector('.blocks-container');
+  const sectionElement = document.getElementById(sectionId);
+  const blocksContainer = sectionElement.querySelector('.blocks-container');
 
-    const blockCounter = blocksContainer.children.length + 1;
-    const blockHTML = `
+  const blockCounter = blocksContainer.children.length + 1;
+  const blockHTML = `
     <div class="block">
       <div class="form-group">
         <label for="${sectionId}-block-${blockCounter}-type">Distance (m):</label>
@@ -55,50 +56,51 @@ function addBlock(sectionId) {
     </div>
   `;
 
-    blocksContainer.insertAdjacentHTML('beforeend', blockHTML);
-    updateBlockCount(sectionId);
+  blocksContainer.insertAdjacentHTML('beforeend', blockHTML);
+  updateBlockCount(sectionId);
 }
 
 function removeSection(sectionId) {
-    document.getElementById(sectionId).remove();
+  document.getElementById(sectionId).remove();
+  sectionCounter--;
 }
 
 function removeBlock(blockButton, sectionId) {
-    blockButton.closest('.block').remove();
-    updateBlockCount(sectionId);
-  }
+  blockButton.closest('.block').remove();
+  updateBlockCount(sectionId);
+}
 
 function updateBlockCount(sectionId) {
-    const sectionElement = document.getElementById(sectionId);
-    const blocksContainer = sectionElement.querySelector('.blocks-container');
-    const blockCountInput = sectionElement.querySelector(`#${sectionId}-block-count`);
-    blockCountInput.value = blocksContainer.children.length;
-  }
+  const sectionElement = document.getElementById(sectionId);
+  const blocksContainer = sectionElement.querySelector('.blocks-container');
+  const blockCountInput = sectionElement.querySelector(`#${sectionId}-block-count`);
+  blockCountInput.value = blocksContainer.children.length;
+}
 
 function submitForm() {
-    const formElement = document.getElementById('swimming-session-form');
-    const formData = new FormData(formElement);
-    const formObject = {};
+  const formElement = document.getElementById('swimming-session-form');
+  const formData = new FormData(formElement);
+  const formObject = {};
 
-    formData.forEach((value, key) => {
-        if (formObject[key]) {
-            if (!Array.isArray(formObject[key])) {
-                formObject[key] = [formObject[key]];
-            }
-            formObject[key].push(value);
-        } else {
-            formObject[key] = value;
-        }
-    });
+  formData.forEach((value, key) => {
+    if (formObject[key]) {
+      if (!Array.isArray(formObject[key])) {
+        formObject[key] = [formObject[key]];
+      }
+      formObject[key].push(value);
+    } else {
+      formObject[key] = value;
+    }
+  });
 
-    console.log(formObject)
+  console.log(formObject)
 
-    fetch('/add-session', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formObject)
-    })
+  fetch('/add-session', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formObject)
+  })
 }
 
