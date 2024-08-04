@@ -5,14 +5,12 @@ from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint("auth", __name__)
-user_has_been_deleted = False
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
-        deleted = request.form.get("True")
 
         user = User.query.filter_by(email=email).first()
         if user:
@@ -24,8 +22,6 @@ def login():
                 flash("Incorrect password, try again.", category="error")
         else:
             flash("Incorrect email, email isn't registered.", category="error")
-        
-        print(deleted)
 
     return render_template("login.html", user=current_user)
 

@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from .models import User, TrainingSession, BlockOfBlocks, Block
+from .views import views
 from . import db
 import json
 
@@ -65,6 +66,8 @@ def add_session():
             user.training_sessions.append(session)
             db.session.commit()
 
+            return jsonify({"redirect": url_for("training.view_sessions")})
+
     return render_template("add_session.html", user=current_user, userID=current_user.id)
 
 @training.route("/edit-session")
@@ -76,3 +79,8 @@ def edit_session():
 @login_required
 def delete_session():
     return render_template("delete_session.html", user=current_user)
+
+@training.route("/view_sessions")
+@login_required
+def view_sessions():
+    return render_template("view_sessions.html", user=current_user, sessions=current_user.training_sessions)

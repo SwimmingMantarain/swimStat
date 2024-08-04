@@ -93,14 +93,16 @@ function submitForm() {
     }
   });
 
-  console.log(formObject)
-
   fetch('/add-session', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(formObject)
+  })
+  .then(response => response.json())
+  .then(data => {
+    window.location.replace(data.redirect);
   })
 }
 

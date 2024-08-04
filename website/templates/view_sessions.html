@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}View Sessions - SwimStats{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/view_sessions.css')}}" />
+<h1 class="mt-4 mb-4">Swimming Training Sessions</h1>
+<div id="sessions-container">
+    {% for session in sessions %}
+        <div class="session-card">
+            <h2>{{ session.name }}</h2>
+            <a href="{{ url_for('training.edit_session', sessionID=session.id) }}">Edit Session</a>
+    {% endfor %}
+</div>
+{% endblock %}
