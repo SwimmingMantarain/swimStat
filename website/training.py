@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
-from .models import User
+from .models import User, TrainingSession, BlockOfBlocks, Block
 from . import db
 import json
 
@@ -34,23 +34,34 @@ def add_session():
                 sections[section] = {"name": name, "blockCount": blockCount, "blocks": blocks}
                 sectionCount += 1
 
-            user = User.query.filter_by(id=userID).first()
+            user = User.query.get(current_user.id)
+            session = TrainingSession()
+            session.name = sessionName
 
             for i in range(sectionCount):
                 id = f"section-{i + 1}"
                 name = sections[id]["name"]
                 blockCount = section[id]["blockCount"]
                 blocks = section[id]["blocks"]
+                blcks = BlockOfBlocks()
+                blcks.name = name
                 for x in range(blockCount):
                     id_ = f"block-{x + 1}"
                     distance = blocks[id_]["distance"]
                     repeatCount = blocks[id_]["repeatCount"]
                     stroke = blocks[id_]["stroke"]
                     exercise = blocks[id_]["exercise"]
-                    user.trainingSessions
-                    
+                    block = Block()
+                    block.distance = distance
+                    block.repeatCount = repeatCount
+                    block.stroke = stroke
+                    block.exercise = exercise
+                    blcks.blocks.query.add(block)
+                session.blocks.query.add(blcks)
+            user.trainingSessions.query.add(session)
 
-    
+            db.session.commit()
+
     return render_template("add_session.html", user=current_user, userID=current_user.id)
 
 @training.route("/edit-session")
