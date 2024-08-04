@@ -1,14 +1,60 @@
-{% extends "base.html" %}
-{% block title %}View Sessions - SwimStats{% endblock %}
-
-{% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/view_sessions.css')}}" />
+{% extends "base.html" %} {% block title %}View Sessions - SwimStats{% endblock
+%} {% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/view_sessions.css')}}"
+/>
 <h1 class="mt-4 mb-4">Swimming Training Sessions</h1>
 <div id="sessions-container">
-    {% for session in sessions %}
-        <div class="session-card">
-            <h2>{{ session.name }}</h2>
-            <a href="{{ url_for('training.edit_session', sessionID=session.id) }}">Edit Session</a>
-    {% endfor %}
+  {% for session in sessions %}
+  <div class="card mb-4">
+    <div class="card-header">{{ session.name }}</div>
+    <div class="card-body">
+      {% for block in session.blocks %}
+      <div class="block">
+        <h3>
+          <h3 style="display: inline">{{ block.name }}</h3>
+          {% if block.is_set == True %}
+            <span style="color: #aaa; font-weight: lighter; font-size: 10px" class="isSetText">[set]</span>
+          {% else %}
+            <span style="color: #333; font-weight: lighter; font-size: 10px" class="isSetText"> </span>
+          {% endif %}
+        </h3>
+        <ul>
+          {% for block in block.blocks %}
+          <table>
+            <tr>
+              <td>- {{ block.distance }}m</td>
+            </tr>
+            <tr>
+              <td>- {{ block.repeatCount }}x</td>
+            </tr>
+            <tr>
+              <td>- {{ block.stroke }}</td>
+            </tr>
+            <tr>
+              <td>- {{ block.exercise }}</td>
+            </tr>
+          </table>
+          <br />
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+      <p>Total distance: {{ session.total_distance }}m</p>
+      <p>Has Set: {{ session.contains_set }}</p>
+      <a
+        href="{{ url_for('training.edit_session', sessionID=session.id) }}"
+        class="btn btn-primary"
+        >Edit Session</a
+      >
+      <a
+        href="{{ url_for('training.delete_session', sessionID=session.id) }}"
+        class="btn btn-danger"
+        >Delete Session</a
+      >
+    </div>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}

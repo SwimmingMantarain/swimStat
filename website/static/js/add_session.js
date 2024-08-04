@@ -1,7 +1,6 @@
 let sectionCounter = 0;
 
 function addSection() {
-  console.log("sdfsdfsdfsdfsdf")
   sectionCounter++;
   const sectionId = `section-${sectionCounter}`;
 
@@ -13,6 +12,10 @@ function addSection() {
       <div class="form-group">
           <label for="${sectionId}-name">Section Name:</label>
           <input type="text" class="form-control" id="${sectionId}-name" name="${sectionId}[name]">
+      </div>
+      <div class="form-group">
+        <label for="${sectionId}-isSet">Is Set?</label>
+        <input type="checkbox" id="${sectionId}-isSet" name="${sectionId}[isSet]" value="false" onchange="this.value = this.checked ? true : false">
       </div>
       <div class="blocks-container">
         <!-- Blocks will be added here dynamically -->

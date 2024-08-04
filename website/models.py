@@ -14,11 +14,14 @@ class BlockOfBlocks(db.Model):
     name = db.Column(db.String(150))
     blocks = db.relationship('Block', backref='block_of_blocks', lazy=True)
     training_session_id = db.Column(db.Integer, db.ForeignKey('training_session.id'), nullable=True)
+    is_set = db.Column(db.Boolean, default=False)
 
 class TrainingSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     blocks = db.relationship('BlockOfBlocks', backref='training_session', lazy=True)
+    total_distance = db.Column(db.Integer)
+    contains_set = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class User(db.Model, UserMixin):
