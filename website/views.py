@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
-from .models import User
+from .models import User, TrainingSession
 from . import db
 import json
 
@@ -9,13 +9,14 @@ views = Blueprint("views", __name__)
 @views.route("/", methods=["GET", "POST"])
 @login_required
 def home():
-    return render_template("home.html", user=current_user)
+    sessions = False if not TrainingSession.query.filter_by(user_id=current_user.id).all() else True
+    return render_template("home.html", user=current_user, sessions=sessions)
 
 @views.route("/settings", methods=["GET", "POST"])
 def settings():
     return render_template("settings.html", user=current_user, userID=current_user.id)
 
-@views.route("/delete-account", methods=["POST", "GET"])
+@views.route("/delete-account", methods=["POST"])
 def delete_account():
     user = json.loads(request.data)
     userID = user["user"]

@@ -22,6 +22,7 @@ class TrainingSession(db.Model):
     blocks = db.relationship('BlockOfBlocks', backref='training_session', lazy=True)
     total_distance = db.Column(db.Integer)
     contains_set = db.Column(db.Boolean, default=False)
+    set_distance = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class User(db.Model, UserMixin):

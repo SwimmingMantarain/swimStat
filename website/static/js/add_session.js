@@ -103,9 +103,13 @@ function submitForm() {
     },
     body: JSON.stringify(formObject)
   })
-  .then(response => response.json())
-  .then(data => {
-    window.location.replace(data.redirect);
-  })
+  .then(response => {
+    if (response.status === 200) {
+      return response.json().then(data => {
+        window.location.replace(data.redirect);
+      });
+    } else {
+      window.location.reload();
+  }});
 }
 
