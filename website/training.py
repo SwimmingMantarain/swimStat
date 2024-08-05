@@ -87,10 +87,18 @@ def add_session():
 def edit_session():
     return render_template("edit_session.html", user=current_user)
 
-@training.route("/delete-session")
+@training.route("/delete-session", methods=["POST"])
 @login_required
 def delete_session():
-    return render_template("delete_session.html", user=current_user)
+    if request.method == "POST":
+        data = request.get_json()
+        if data:
+            sessionID = data["sessionID"]
+            session = TrainingSession.query.get(sessionID)
+            if session:
+                db.session.delete(session)
+                db.session.commit()
+                return jsonify({"redirect": url_for("training.view_sessions")})
 
 @training.route("/view_sessions")
 @login_required

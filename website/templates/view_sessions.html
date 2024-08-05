@@ -49,12 +49,13 @@
         >Edit Session</a
       >
       <a
-        href="{{ url_for('training.delete_session', sessionID=session.id) }}"
-        class="btn btn-danger"
+        class="btn caution"
+        onClick="deleteSession({{ session.id }})"
         >Delete Session</a
       >
     </div>
   </div>
   {% endfor %}
 </div>
+<script src="{{ url_for('static', filename='js/view_session.js') }}"></script>
 {% endblock %}
