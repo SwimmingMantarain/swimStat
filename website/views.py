@@ -50,3 +50,29 @@ def delete_account():
     # Redirect to the login page
     return redirect(url_for("auth.login"))
 
+@views.route("/delete-sessions", methods=["POST"])
+def delete_sessions():
+    """
+    Handle POST request for deleting all training sessions.
+    """
+    # Get the user ID from the request data
+    user = json.loads(request.data)
+    userID = user["user"]
+
+    # Find the user in the database
+    user = User.query.get(userID)
+
+    # Check if the user exists and if it's the current user
+    if user and user.id == current_user.id:
+        # Delete all training sessions from the database
+        for session in db.session.query(TrainingSession).filter_by(user_id=user.id):
+            for blockofblocks in db.session.query(BlockOfBlocks).filter_by(session_id=session.id):
+                for block in db.session.query(Block).filter_by(blockofblocks_id=blockofblocks.id):
+                    db.session.delete(block)
+                db.session.delete(blockofblocks)
+            db.session.delete(session)
+
+        db.session.commit()
+
+    # Redirect to the home page
+    return redirect(url_for("training.view_sessions"))

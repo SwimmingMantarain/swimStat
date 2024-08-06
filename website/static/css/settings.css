@@ -5,6 +5,11 @@
     font-weight: bold;
 }
 
+.settings-container {
+    margin: 20px;
+    align-content: center;
+}
+
 .card-header {
     font-weight:bolder;
     font-size: 56px;
