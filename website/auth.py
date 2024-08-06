@@ -8,10 +8,15 @@ auth = Blueprint("auth", __name__)
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    Handle POST and GET requests for user login.
+    """
     if request.method == "POST":
+        # Get email and password from form
         email = request.form.get("email")
         password = request.form.get("password")
 
+        # Check if user exists and password is correct
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
@@ -28,18 +33,26 @@ def login():
 @auth.route("/logout")
 @login_required
 def logout():
+    """
+    Logout the user and redirect to login page.
+    """
     logout_user()
     flash("Logged Out", category="success")
     return redirect(url_for("auth.login"))
 
 @auth.route("/sign-up",  methods=["GET", "POST"])
 def sign_up():
+    """
+    Handle POST and GET requests for user sign up.
+    """
     if request.method == "POST":
+        # Get user details from form
         email = request.form.get("email")
         firstName = request.form.get("firstName")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
 
+        # Check if email is already registered
         user = User.query.filter_by(email=email).first()
         if user:
             flash("Email already registered.", category="error")
@@ -52,6 +65,7 @@ def sign_up():
         elif len(password1) < 8:
             flash("Password must be at least 8 characters.", category="error")
         else:
+            # Create new user and log them in
             new_user = User(email=email, firstName=firstName, password=generate_password_hash(password1, "scrypt"))
             db.session.add(new_user)
             db.session.commit()

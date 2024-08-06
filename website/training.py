@@ -10,9 +10,13 @@ training = Blueprint("training", __name__)
 @training.route("/add-session", methods=["POST", "GET"])
 @login_required
 def add_session():
+    """
+    Handle POST and GET requests for adding a training session.
+    """
     if request.method == "POST":
         data = request.get_json()
         if data:
+            # Extract session name and sections from POST data
             session_name = data["sessionName"]
             sections = {}
             contains_set = False
@@ -29,6 +33,7 @@ def add_session():
             if len(section_ids) == 9:
                 section_ids = [f"{section_ids}"]
 
+            # Process each section and its blocks
             for section_id in section_ids:
                 section_id = f"{section_id.replace('section-', '')}"
                 block_count = int(data[f"section[{section_id}][blockCount]"])
@@ -73,6 +78,7 @@ def add_session():
             total_distance = 0
             set_distance = 0
 
+            # Process each section's blocks and add them to the database
             for i, section_id in enumerate(sections, start=1):
                 section_name = sections[section_id]["name"]
                 is_set = sections[section_id]["isSet"]
@@ -114,11 +120,17 @@ def add_session():
 @training.route("/edit-session")
 @login_required
 def edit_session():
+    """
+    Handle GET requests for editing a training session.
+    """
     return render_template("edit_session.html", user=current_user)
 
 @training.route("/delete-session", methods=["POST"])
 @login_required
 def delete_session():
+    """
+    Handle POST requests for deleting a training session.
+    """
     if request.method == "POST":
         data = request.get_json()
         if data:
@@ -132,4 +144,7 @@ def delete_session():
 @training.route("/view_sessions")
 @login_required
 def view_sessions():
+    """
+    Handle GET requests for viewing training sessions.
+    """
     return render_template("view_sessions.html", user=current_user, sessions=current_user.training_sessions)
