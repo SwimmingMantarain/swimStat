@@ -1,7 +1,5 @@
 # Swim Stats
 
-[![CircleCI](https://circleci.com/gh/jamesdavies/swimstats.svg?style=svg)](https://circleci.com/gh/jamesdavies/swimstats)
-
 Swim Stats is a web application designed to help swimmers track their progress and plan their training sessions.
 
 ## Features
