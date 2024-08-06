@@ -1,6 +1,3 @@
-import sys
-import os
-import signal
 from website import create_app
 
 app = create_app()

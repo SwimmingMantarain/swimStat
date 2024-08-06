@@ -6,8 +6,7 @@
 />
 <h1 class="mt-4 mb-4">Swimming Training Sessions</h1>
 <div id="sessions-container">
-  {% for session in sessions %}
-  {% set setDistance = 0 %}
+  {% for session in sessions %} {% set setDistance = 0 %}
   <div class="card mb-4">
     <div class="card-header">{{ session.name }}</div>
     <div class="card-body">
@@ -16,9 +15,17 @@
         <h3>
           <h3 style="display: inline">{{ block.name }}</h3>
           {% if block.is_set == True %}
-            <span style="color: #aaa; font-weight: lighter; font-size: 10px" class="isSetText">[set]</span>
+          <span
+            style="color: #aaa; font-weight: lighter; font-size: 10px"
+            class="isSetText"
+            >[set]</span
+          >
           {% else %}
-            <span style="color: #333; font-weight: lighter; font-size: 10px" class="isSetText"> </span>
+          <span
+            style="color: #333; font-weight: lighter; font-size: 10px"
+            class="isSetText"
+          >
+          </span>
           {% endif %}
         </h3>
         <ul>
@@ -43,9 +50,11 @@
       </div>
       {% endfor %}
       <p>Total distance: {{ session.total_distance }}m</p>
-      <p>Has Set: {% if session.contains_set == True %}Yes{% else %}No{% endif %}</p>
+      <p>
+        Has Set: {% if session.contains_set == True %}Yes{% else %}No{% endif %}
+      </p>
       {% if session.contains_set == 1 %}
-        <p>Set Distance: {{ session.set_distance }}m</p>
+      <p>Set Distance: {{ session.set_distance }}m</p>
       {% endif %}
       <div class="button-container">
         <a
@@ -53,9 +62,7 @@
           class="btn btn-primary"
           >Edit Session</a
         >
-        <a
-          class="btn caution"
-          onClick="deleteSession({{session.id}})"
+        <a class="btn caution" onClick="deleteSession({{session.id}})"
           >Delete Session</a
         >
       </div>

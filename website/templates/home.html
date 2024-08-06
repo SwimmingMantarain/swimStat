@@ -1,77 +1,71 @@
-{% extends "base.html" %}
-{% block title %}Home - SwimStats{% endblock %}
+{% extends "base.html" %} {% block title %}Home - SwimStats{% endblock %} {%
+block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/home.css')}}"
+  <div
+  class="card mb-4"
+/>
+<div class="card-header">Your Swim Stats</div>
+<div class="card-body">
+  <!-- Buttons -->
+  <h5>Training Sessions</h5>
+  <a class="btn btn-primary" href="/add-session">Add Training Session</a>
+  <br /><br />
+  <!-- Summary statistics -->
+  <div class="mb-4">
+    <h5>Summary</h5>
+    <ul>
+      <li>Total Kilometers Swum: <span id="totalKmSwum">0</span> km</li>
+      <li>Total Kilometers of Sets: <span id="totalKmSets">0</span> km</li>
+    </ul>
+  </div>
 
-{% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css')}}"
-<div class="card mb-4">
-    <div class="card-header">
-        Your Swim Stats
-    </div>
-    <div class="card-body">
-        <!-- Buttons -->
-        <h5>Training Sessions</h5>
-        <div class="dropdown">
-            <button
-              class="btn btn-secondary dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Training Sessions
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="/add-session">Add Training Session</a>
-              <a class="dropdown-item" href="/edit-session">Edit Training Session</a>
-            </div>
-          </div>
-        <br/>
-        <!-- Summary statistics -->
-        <div class="mb-4">
-            <h5>Summary</h5>
-            <ul>
-                <li>Total Kilometers Swum: <span id="totalKmSwum">0</span> km</li>
-                <li>Total Kilometers of Sets: <span id="totalKmSets">0</span> km</li>
-            </ul>
-        </div>
-        
-        <!-- Graph container -->
-        <canvas id="swimStatsChart" width="400" height="200"></canvas>
-        
-        <!-- Chart.js library -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            // Example data, replace with actual data from your database
-            var totalKmSwum = 45; // Total kilometers swum
-            var totalKmSets = 30; // Total kilometers of sets
+  <!-- Graph container -->
+  <canvas id="swimStatsChart" width="400" height="200"></canvas>
 
-            // Update summary statistics in the DOM
-            document.getElementById('totalKmSwum').textContent = totalKmSwum;
-            document.getElementById('totalKmSets').textContent = totalKmSets;
+  <!-- Chart.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Example data, replace with actual data from your database
+    var totalKmSwum = 45; // Total kilometers swum
+    var totalKmSets = 30; // Total kilometers of sets
 
-            var ctx = document.getElementById('swimStatsChart').getContext('2d');
-            var swimStatsChart = new Chart(ctx, {
-                type: 'line', // Type of chart: line, bar, etc.
-                data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'], // X-axis labels
-                    datasets: [{
-                        label: 'Swimming Distance (meters)',
-                        data: [1200, 1500, 800, 1700, 1900, 1600, 2100], // Dummy data
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        </script>
-    </div>
+    // Update summary statistics in the DOM
+    document.getElementById("totalKmSwum").textContent = totalKmSwum;
+    document.getElementById("totalKmSets").textContent = totalKmSets;
+
+    var ctx = document.getElementById("swimStatsChart").getContext("2d");
+    var swimStatsChart = new Chart(ctx, {
+      type: "line", // Type of chart: line, bar, etc.
+      data: {
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+        ], // X-axis labels
+        datasets: [
+          {
+            label: "Swimming Distance (meters)",
+            data: [1200, 1500, 800, 1700, 1900, 1600, 2100], // Dummy data
+            borderColor: "rgba(75, 192, 192, 1)",
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  </script>
 </div>
 {% endblock %}
