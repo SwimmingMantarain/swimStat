@@ -55,10 +55,10 @@ def add_session():
                 if block_count > 0:
                     for i in range(1, block_count + 1):
                         block_id = f"block-{i}"
-                        distance = data[f"{section_id}[{block_id}][distance]"]
-                        repeat_count = data[f"{section_id}[{block_id}][repeat]"]
-                        stroke = data[f"{section_id}[{block_id}][strokes]"]
-                        exercise = data[f"{section_id}[{block_id}][exercise]"]
+                        distance = data[f"section-{section_id}[{block_id}][distance]"]
+                        repeat_count = data[f"section-{section_id}[{block_id}][repeat]"]
+                        stroke = data[f"section-{section_id}[{block_id}][strokes]"]
+                        exercise = data[f"section-{section_id}[{block_id}][exercise]"]
                         blocks[block_id] = {
                             "distance": distance,
                             "repeatCount": repeat_count,
@@ -117,13 +117,151 @@ def add_session():
 
     return render_template("add_session.html", user=current_user, userID=current_user.id)
 
-@training.route("/edit-session")
+@training.route("/edit-session/<sessionID>", methods=["GET", "POST"])
 @login_required
-def edit_session():
+def edit_session(sessionID):
     """
-    Handle GET requests for editing a training session.
+    Handle GET and POST requests for editing a training session.
+
+    Args:
+        sessionID (str): The ID of the training session to edit.
+
+    Returns:
+        If the request method is POST, this function returns a JSON response with a redirect URL.
+        If the request method is GET, this function renders the edit_session.html template.
     """
-    return render_template("edit_session.html", user=current_user)
+    # Get the training session with the given ID
+    session = TrainingSession.query.get(sessionID)
+
+    if request.method == "POST":
+        # Extract session name and sections from POST data
+        data = request.get_json()
+
+        # Check if data exists
+        if data:
+            session_name = data["sessionName"]
+            sections = {}
+            contains_set = False
+            total_distance = 0
+            set_distance = 0
+
+            try:
+                section_ids = data["section-ids"]
+                # Check if at least one section is added
+                if not section_ids:
+                    flash("Please add at least one section", category="error")
+                    return jsonify({}), 400
+            except KeyError:
+                flash("Please add at least one section", category="error")
+                return jsonify({}), 400
+            
+            # If only one section is added, convert it to a list
+            if len(section_ids) == 9:
+                section_ids = [f"{section_ids}"]
+
+            # Process each section and its blocks
+            for section_id in section_ids:
+                section_id = f"{section_id.replace('section-', '')}"
+                block_count = int(data[f"section[{section_id}][blockCount]"])
+
+                # Check if at least one block is added
+                if block_count < 0:
+                    flash("Please add at least one block", category="error")
+                    return jsonify({}), 400
+
+                section_name = data[f"section-{section_id}[name]"]
+
+                try:
+                    is_set = True if data[f"section-{section_id}[isSet]"] == "true" else False
+                    if is_set:
+                        contains_set = True
+                except KeyError:
+                    is_set = False
+
+                blocks = {}
+                if block_count > 0:
+                    for i in range(1, block_count + 1):
+                        block_id = f"block-{i}"
+                        distance = data[f"section-{section_id}[{block_id}][distance]"]
+                        repeat_count = data[f"section-{section_id}[{block_id}][repeat]"]
+                        stroke = data[f"section-{section_id}[{block_id}][strokes]"]
+                        exercise = data[f"section-{section_id}[{block_id}][exercise]"]
+                        blocks[block_id] = {
+                            "distance": distance,
+                            "repeatCount": repeat_count,
+                            "stroke": stroke,
+                            "exercise": exercise
+                        }
+
+                        total_distance += int(distance) * int(repeat_count)
+
+                        if is_set:
+                            set_distance += int(distance) * int(repeat_count)
+
+                sections[section_id] = {
+                    "name": section_name,
+                    "blockCount": block_count,
+                    "blocks": blocks,
+                    "isSet": is_set
+                }
+
+            # Process each section's blocks and update the database
+            for i, section_id in enumerate(sections, start=1):
+                section_name = sections[section_id]["name"]
+                is_set = sections[section_id]["isSet"]
+                block_count = sections[section_id]["blockCount"]
+                blocks = sections[section_id]["blocks"]
+
+                # Check if a block of blocks with the given name already exists
+                section_blocks = BlockOfBlocks.query.filter_by(training_session=session, name=section_name).first()
+                if section_blocks:
+                    # Update the existing block of blocks
+                    section_blocks.name = section_name
+                    section_blocks.is_set = is_set
+                else:
+                    # Create a new block of blocks
+                    section_blocks = BlockOfBlocks(name=section_name, training_session=session, is_set=is_set)
+                    session.blocks.append(section_blocks)
+
+                for x in range(block_count):
+                    block_id = f"block-{x + 1}"
+                    block_data = blocks[block_id]
+
+                    # Check if a block with the given data already exists
+                    block = Block.query.filter_by(block_of_blocks_id=section_blocks.id, distance=block_data["distance"],
+                                                   repeatCount=block_data["repeatCount"], stroke=block_data["stroke"],
+                                                   exercise=block_data["exercise"]).first()
+                    if block:
+                        # Update the existing block
+                        block.distance = block_data["distance"]
+                        block.repeatCount = block_data["repeatCount"]
+                        block.stroke = block_data["stroke"]
+                        block.exercise = block_data["exercise"]
+                    else:
+                        # Create a new block
+                        block = Block(
+                            distance=block_data["distance"],
+                            repeatCount=block_data["repeatCount"],
+                            stroke=block_data["stroke"],
+                            exercise=block_data["exercise"],
+                            block_of_blocks_id=section_blocks.id
+                        )
+
+                        section_blocks.blocks.append(block)
+
+            # Update the session details
+            session.name = session_name
+            session.total_distance = total_distance
+            session.set_distance = set_distance
+            session.contains_set = contains_set
+            db.session.commit()
+
+            # Redirect to the view_sessions page
+            return jsonify({"redirect": url_for("training.view_sessions")})
+
+    # Convert the session to json so jinja and js stop complaining
+    session = session.to_dict()
+    return render_template("edit_session.html", user=current_user, session=session, sessionID=sessionID)
 
 @training.route("/delete-session", methods=["POST"])
 @login_required

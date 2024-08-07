@@ -15,6 +15,15 @@ class Block(db.Model):
     block_of_blocks_id = db.Column(db.Integer, 
                                    db.ForeignKey('block_of_blocks.id'), 
                                    nullable=True)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "distance": self.distance,
+            "repeatCount": self.repeatCount,
+            "stroke": self.stroke,
+            "exercise": self.exercise
+        }
 
 
 # BlockOfBlocks Model: Stores information about a group of blocks in a training session
@@ -32,6 +41,14 @@ class BlockOfBlocks(db.Model):
                                      nullable=True)
     is_set = db.Column(db.Boolean, default=False)
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "blocks": [block.to_dict() for block in self.blocks],
+            "is_set": self.is_set
+        }
+
 
 # TrainingSession Model: Stores information about a training session
 class TrainingSession(db.Model):
@@ -47,6 +64,16 @@ class TrainingSession(db.Model):
     set_distance = db.Column(db.Integer)
     # Foreign key to User table
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "blocks": [block.to_dict() for block in self.blocks],
+            "total_distance": self.total_distance,
+            "contains_set": self.contains_set,
+            "set_distance": self.set_distance
+        }
 
 
 # User Model: Stores information about a user
