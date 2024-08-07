@@ -3,23 +3,24 @@ let sectionCounter = 0;
 async function loadTrainingSession(session) {
 	document.getElementById('session-name').value = session.name;
 
-	session.blocks.forEach((sessionSection) => {
+	session.blocks.forEach((sessionSection, sessionSectionIndex) => {
 		addSection();
-		const sectionElement = document.getElementById(`section-${sectionCounter}`);
-		sectionElement.querySelector(`#section-${sectionCounter}-name`).value = sessionSection.name;
+		const sectionElement = document.getElementById(`section-${sessionSectionIndex+1}`);
+		sectionElement.querySelector(`#section-${sessionSectionIndex+1}-name`).value = sessionSection.name;
 		if (sessionSection.is_set) {
-			sectionElement.querySelector(`#section-${sectionCounter}-isSet`).checked = true;
+			sectionElement.querySelector(`#section-${sessionSectionIndex+1}-isSet`).checked = true;
+			sectionElement.querySelector(`#section-${sessionSectionIndex+1}-isSet`).value = true;
 		} else {
-			sectionElement.querySelector(`#section-${sectionCounter}-isSet`).checked = false;
+			sectionElement.querySelector(`#section-${sessionSectionIndex+1}-isSet`).checked = false;
 		}
 		sessionSection.blocks.forEach((sessionBlock, blockIndex) => {
 			if (sectionElement) {
-				addBlock(`section-${sectionCounter}`);
+				addBlock(`section-${sessionSectionIndex+1}`);
 				const blockElement = sectionElement.querySelector(`.block:nth-child(${blockIndex + 1})`);
-				blockElement.querySelector(`#section-${sectionCounter}-block-${blockIndex + 1}-distance`).value = sessionBlock.distance;
-				blockElement.querySelector(`#section-${sectionCounter}-block-${blockIndex + 1}-repeat`).value = sessionBlock.repeatCount;
-				blockElement.querySelector(`#section-${sectionCounter}-block-${blockIndex + 1}-strokes`).value = sessionBlock.stroke;
-				blockElement.querySelector(`#section-${sectionCounter}-block-${blockIndex + 1}-exercise`).value = sessionBlock.exercise;
+				blockElement.querySelector(`#section-${sessionSectionIndex+1}-block-${blockIndex + 1}-distance`).value = sessionBlock.distance;
+				blockElement.querySelector(`#section-${sessionSectionIndex+1}-block-${blockIndex + 1}-repeat`).value = sessionBlock.repeatCount;
+				blockElement.querySelector(`#section-${sessionSectionIndex+1}-block-${blockIndex + 1}-strokes`).value = sessionBlock.stroke;
+				blockElement.querySelector(`#section-${sessionSectionIndex+1}-block-${blockIndex + 1}-exercise`).value = sessionBlock.exercise;
 			}
 		});
 	});
@@ -55,9 +56,9 @@ function addSection() {
 
 function addBlock(sectionId) {
 	const sectionElement = document.getElementById(sectionId);
-	const blocksContainer = sectionElement?.querySelector('.blocks-container');
+	const blocksContainer = sectionElement.querySelector('.blocks-container');
 
-	const blockCounter = blocksContainer?.children.length + 1;
+	const blockCounter = blocksContainer.children.length + 1;
 	const blockHTML = `
     <div class="block">
       <div class="form-group">
@@ -84,25 +85,36 @@ function addBlock(sectionId) {
     </div>
   `;
 
-	blocksContainer?.insertAdjacentHTML('beforeend', blockHTML);
+	blocksContainer.insertAdjacentHTML('beforeend', blockHTML);
 	updateBlockCount(sectionId);
 }
 
 function removeSection(sectionId) {
-	document.getElementById(sectionId)?.remove();
+	const sectionElement = document.getElementById(sectionId);
+	const sectionIndex = +sectionElement.id.split('-')[1];
+	sectionElement.remove();
+	const sections = document.querySelectorAll('fieldset');
+	sections.forEach((section, index) => {
+		section.id = `section-${index+1}`;
+	});
 	sectionCounter--;
 }
 
-function removeBlock(blockButton, sectionId) {
-	blockButton.closest('.block')?.remove();
+function removeBlock(blockButton) {
+	const sectionId = blockButton.closest('fieldset').id;
+	blockButton.closest('.block').remove();
 	updateBlockCount(sectionId);
 }
 
 function updateBlockCount(sectionId) {
 	const sectionElement = document.getElementById(sectionId);
-	const blocksContainer = sectionElement.querySelector('.blocks-container');
-	const blockCountInput = sectionElement.querySelector(`#${sectionId}-block-count`);
-	blockCountInput.value = blocksContainer.children.length;
+	if (sectionElement) {
+		const blocksContainer = sectionElement.querySelector('.blocks-container');
+		const blockCountInput = sectionElement.querySelector(`#${sectionId}-block-count`);
+		if (blockCountInput) {
+			blockCountInput.value = blocksContainer.children.length;
+		}
+	}
 }
 
 function submitForm() {
@@ -138,6 +150,4 @@ function submitForm() {
 			}
 		});
 }
-
-
 

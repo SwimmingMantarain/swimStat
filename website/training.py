@@ -134,8 +134,18 @@ def edit_session(sessionID):
     session = TrainingSession.query.get(sessionID)
 
     if request.method == "POST":
+        if session:
+            # Delete the session, its associated blockofblocks and their associated blocks
+            for blockofblocks in session.blocks:
+                for block in blockofblocks.blocks:
+                    db.session.delete(block)
+                db.session.delete(blockofblocks)
+            db.session.delete(session)
+            db.session.commit()
+        
         # Extract session name and sections from POST data
         data = request.get_json()
+        print(data)
 
         # Check if data exists
         if data:
@@ -205,6 +215,10 @@ def edit_session(sessionID):
                     "isSet": is_set
                 }
 
+            # Create a new training session
+            session = TrainingSession(name=session_name, user_id=current_user.id)
+            db.session.add(session)
+
             # Process each section's blocks and update the database
             for i, section_id in enumerate(sections, start=1):
                 section_name = sections[section_id]["name"]
@@ -212,42 +226,24 @@ def edit_session(sessionID):
                 block_count = sections[section_id]["blockCount"]
                 blocks = sections[section_id]["blocks"]
 
-                # Check if a block of blocks with the given name already exists
-                section_blocks = BlockOfBlocks.query.filter_by(training_session=session, name=section_name).first()
-                if section_blocks:
-                    # Update the existing block of blocks
-                    section_blocks.name = section_name
-                    section_blocks.is_set = is_set
-                else:
-                    # Create a new block of blocks
-                    section_blocks = BlockOfBlocks(name=section_name, training_session=session, is_set=is_set)
-                    session.blocks.append(section_blocks)
+                # Create a new block of blocks
+                section_blocks = BlockOfBlocks(name=section_name, training_session=session, is_set=is_set)
+                session.blocks.append(section_blocks)
 
+                # Create each block
                 for x in range(block_count):
                     block_id = f"block-{x + 1}"
                     block_data = blocks[block_id]
 
-                    # Check if a block with the given data already exists
-                    block = Block.query.filter_by(block_of_blocks_id=section_blocks.id, distance=block_data["distance"],
-                                                   repeatCount=block_data["repeatCount"], stroke=block_data["stroke"],
-                                                   exercise=block_data["exercise"]).first()
-                    if block:
-                        # Update the existing block
-                        block.distance = block_data["distance"]
-                        block.repeatCount = block_data["repeatCount"]
-                        block.stroke = block_data["stroke"]
-                        block.exercise = block_data["exercise"]
-                    else:
-                        # Create a new block
-                        block = Block(
-                            distance=block_data["distance"],
-                            repeatCount=block_data["repeatCount"],
-                            stroke=block_data["stroke"],
-                            exercise=block_data["exercise"],
-                            block_of_blocks_id=section_blocks.id
-                        )
+                    block = Block(
+                        distance=block_data["distance"],
+                        repeatCount=block_data["repeatCount"],
+                        stroke=block_data["stroke"],
+                        exercise=block_data["exercise"],
+                        block_of_blocks_id=section_blocks.id
+                    )
 
-                        section_blocks.blocks.append(block)
+                    section_blocks.blocks.append(block)
 
             # Update the session details
             session.name = session_name
@@ -261,6 +257,7 @@ def edit_session(sessionID):
 
     # Convert the session to json so jinja and js stop complaining
     session = session.to_dict()
+    print(session)
     return render_template("edit_session.html", user=current_user, session=session, sessionID=sessionID)
 
 @training.route("/delete-session", methods=["POST"])
