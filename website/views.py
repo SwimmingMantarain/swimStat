@@ -18,6 +18,18 @@ def home():
     sessions = False if not TrainingSession.query.filter_by(user_id=current_user.id).all() else True
     return render_template("home.html", user=current_user, sessions=sessions)
 
+@views.route("/feedback", methods=["GET", "POST"])
+@login_required
+def feedback():
+    """
+    Handle GET and POST requests for the feedback page.
+    """
+    if request.method == "POST":
+        # Get the user ID from the request data
+        feedback = json.loads(request.data)
+        print(feedback)
+
+    return render_template("feedback.html", user=current_user)
 
 # Route for the settings page
 @views.route("/settings", methods=["GET", "POST"])
