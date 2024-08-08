@@ -16,6 +16,17 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
 
+        if email == "admin@aquametrics.org":
+            user = User.query.filter_by(email=email).first()
+            if user.is_admin:
+                print(password, user.password)
+                if check_password_hash(user.password, password):
+                    flash("Logged in successfully.", category="success")
+                    login_user(user, remember=True)
+                    return redirect(url_for("admin.admin_page"))
+                else:
+                    flash("Incorrect password, try again.", category="error")
+
         # Check if user exists and password is correct
         user = User.query.filter_by(email=email).first()
         if user:
