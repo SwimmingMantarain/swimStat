@@ -6,7 +6,7 @@
         <label for="feedback">Feedback:</label>
         <textarea class="form-control" id="feedback" name="feedback"></textarea>
     </div>
-    <button type="submit" class="btn btn-primary" onClick="sendFeedback(document.getElementById('feedback'))">Submit</button>
+    <button type="button" class="btn btn-primary" onClick="sendFeedback(document.getElementById('feedback').value)">Submit</button>
 </form>
 <script src="{{ url_for('static', filename='js/feedback.js') }}"></script>
 {% endblock %}

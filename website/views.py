@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from .models import User, TrainingSession
+from .admin import send_email
 from . import db
 import json
 
@@ -27,7 +28,10 @@ def feedback():
     if request.method == "POST":
         # Get the user ID from the request data
         feedback = json.loads(request.data)
-        print(feedback)
+        subject = "AquaMetrics - Feedback"
+        body = feedback["data"]
+        send_email(subject, body, "swimmingMantarain@gmail.com")
+        
 
     return render_template("feedback.html", user=current_user)
 

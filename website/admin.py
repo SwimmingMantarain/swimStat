@@ -22,12 +22,14 @@ def create_admin():
     db.session.commit()
 
 @admin.before_app_request
-def create_admin_user():
+def startup_tasks():
     """
     Create an admin user if one doesn't exist.
     """
     if not User.query.filter_by(email="admin@aquametrics.org").first():
         create_admin()
+
+
 
 @admin.route("/admin", methods=["GET", "POST"])
 @login_required
@@ -40,11 +42,14 @@ def admin_page():
     else:
         flash("You do not have permission to access this page.", category="error")
         return redirect(url_for("auth.login"))
-
+"""
 # Function to start Serveo and capture the URL
 def start_serveo():
+    # Kill any existing Serveo processes
+    subprocess.run(["killall", "ssh"])
+
     # SSH command to start Serveo
-    command = ["ssh", "-o", "StrictHostKeyChecking=no", "-R", "80:localhost:5000", "serveo.net"]
+    command = ["ssh", "-R", "aqua-metrics:80:localhost:80", "serveo.net"]
 
     # Start Serveo and capture the output
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -52,12 +57,11 @@ def start_serveo():
     # Wait for Serveo to establish and capture the output
     for line in process.stdout:
         # Regex to capture the URL
-        match = re.search(r'(https://[\w-]+\.serveo\.net)', line)
+        match = re.search(r'(https://aqua-metrics\.serveo\.net)', line)
         if match:
-            print(match.group(0))
             return match.group(0)
     
-    return None
+    return None"""
 
 # Function to send email
 def send_email(subject, body, recipient):
@@ -89,10 +93,10 @@ def emails():
     if request.method == "POST":
         recipients = request.form.get("recipients")
         recipients = recipients.split(",")
-        link = start_serveo()
+        #link = start_serveo()
         for recipient in recipients:
             subject = "AquaMetrics - Regenerated Link"
-            body = f"here is your link:\n{link}"
+            body = f"here is your link:\naqua-metrics.serveo.net"
             send_email(subject, body, recipient)
         
         return redirect(url_for("admin.admin_page"))
