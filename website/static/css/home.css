@@ -1,3 +1,13 @@
 h5 {
     font-weight: bold;
 }
+
+.card, .card-body {
+    width: fit-content;
+    height: fit-content;
+}
+
+.card {
+    display: inline-block;
+    margin-right: 20px;
+}

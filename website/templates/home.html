@@ -1,18 +1,19 @@
-{% extends "base.html" %} {% block title %}{% if user.is_admin %}AquaMetrics{% else %}Home - AquaMetrics{% endif %}{% endblock %} {%
-block content %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/home.css')}}"
-  <div
-  class="card mb-4"
-/>
-<div class="card-header">Your Swim Stats</div>
+{% extends "base.html" %} {% block title %}{% if user.is_admin %}AquaMetrics{%
+else %}Home - AquaMetrics{% endif %}{% endblock %} {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css')}}" />
+
+<!-- Button Card -->
+<div class="card mb-4">
+<div class="card-header">Your Sessions</div>
 <div class="card-body">
-  <!-- Buttons -->
-  <h5>Training Sessions</h5>
   <a class="btn btn-primary" href="/add-session">Add Training Session</a>
   <a class="btn btn-primary" href="/feedback">Feedback</a>
-  <br /><br />
+</div>
+</div>
+
+<div class="card mb-4">
+<div class="card-header">Your Statistcs</div>
+<div class="card-body">
   <!-- Summary statistics -->
   <div class="mb-4">
     <h5>Summary</h5>
@@ -21,52 +22,11 @@ block content %}
       <li>Total Kilometers of Sets: <span id="totalKmSets">0</span> km</li>
     </ul>
   </div>
-
   <!-- Graph container -->
   <canvas id="swimStatsChart" width="400" height="200"></canvas>
-
   <!-- Chart.js library -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    // Example data, replace with actual data from your database
-    var totalKmSwum = 45; // Total kilometers swum
-    var totalKmSets = 30; // Total kilometers of sets
-
-    // Update summary statistics in the DOM
-    document.getElementById("totalKmSwum").textContent = totalKmSwum;
-    document.getElementById("totalKmSets").textContent = totalKmSets;
-
-    var ctx = document.getElementById("swimStatsChart").getContext("2d");
-    var swimStatsChart = new Chart(ctx, {
-      type: "line", // Type of chart: line, bar, etc.
-      data: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ], // X-axis labels
-        datasets: [
-          {
-            label: "Swimming Distance (meters)",
-            data: [1200, 1500, 800, 1700, 1900, 1600, 2100], // Dummy data
-            borderColor: "rgba(75, 192, 192, 1)",
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-  </script>
+  <script src="{{ url_for('static', filename='js/homejs.js') }}"></script>
+</div>
 </div>
 {% endblock %}
