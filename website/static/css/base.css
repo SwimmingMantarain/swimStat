@@ -6,9 +6,26 @@ body {
     color: #fff;
 }
 
-.container {
-    margin: 10px;
+.card-header {
     align-content: center;
+    text-align: center;
+}
+
+.navbar-brand {
+    font-weight: bolder;
+    font-size: 26px;
+}
+
+#feedback-text {
+    display: inline;
+    font-size: large;
+    vertical-align: sub;
+    padding: 0;
+}
+
+.container {
+    margin: 10px !important;
+    align-content: center !important;
     max-width: 100% !important;
 }
 
@@ -109,3 +126,4 @@ body {
     cursor: pointer;
     color: #fff;
 }
+
