@@ -41,7 +41,8 @@ def settings():
     """
     Handle GET and POST requests for the settings page.
     """
-    return render_template("settings.html", user=current_user, userID=current_user.id)
+    sessions = False if not TrainingSession.query.filter_by(user_id=current_user.id).all() else True
+    return render_template("settings.html", user=current_user, userID=current_user.id, sessions=sessions)
 
 
 # Route for deleting an account

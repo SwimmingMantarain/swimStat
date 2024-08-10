@@ -114,7 +114,7 @@ def add_session():
             db.session.commit()
 
             return jsonify({"redirect": url_for("training.view_sessions")})
-
+        
     return render_template("add_session.html", user=current_user, userID=current_user.id)
 
 @training.route("/edit-session/<sessionID>", methods=["GET", "POST"])
@@ -145,7 +145,6 @@ def edit_session(sessionID):
         
         # Extract session name and sections from POST data
         data = request.get_json()
-        print(data)
 
         # Check if data exists
         if data:
@@ -257,7 +256,6 @@ def edit_session(sessionID):
 
     # Convert the session to json so jinja and js stop complaining
     session = session.to_dict()
-    print(session)
     return render_template("edit_session.html", user=current_user, session=session, sessionID=sessionID)
 
 @training.route("/delete-session", methods=["POST"])

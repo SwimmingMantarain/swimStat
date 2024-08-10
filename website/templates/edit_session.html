@@ -1,5 +1,4 @@
-{% extends "base.html" %} {% block title %}Edit Session - AquaMetrics{% endblock
-%} {% block content %}
+{% extends "base.html" %} {% block title %}{% if user.is_admin %}AquaMetrics{% else %}Edit Session - AquaMetrics{% endif %}{% endblock %} {% block content %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/edit_session.css')}}"

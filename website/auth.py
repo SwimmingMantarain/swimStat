@@ -19,7 +19,6 @@ def login():
         if email == "admin@aquametrics.org":
             user = User.query.filter_by(email=email).first()
             if user.is_admin:
-                print(password, user.password)
                 if check_password_hash(user.password, password):
                     flash("Logged in successfully.", category="success")
                     login_user(user, remember=True)
