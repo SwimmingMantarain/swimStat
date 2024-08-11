@@ -8,7 +8,7 @@ async function killTunnel() {
 }
 
 const fetchData = () => {
-    fetch('/admin.admin', {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({"diag" : "diag"})}).then(response => {
+    fetch('/admin', {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({"diag" : "diag"})}).then(response => {
         return response.json();
     }).then(data => {
         const coretemps = data.coretemps;
