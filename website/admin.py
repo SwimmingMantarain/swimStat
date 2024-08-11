@@ -50,7 +50,7 @@ def admin_page():
     
     if current_user.is_admin:
         data = getDiagnostics()
-        return render_template("admin.html", user=current_user, coretemps=data["temps"], temp_avg=data["temp_avg"], meminfo=data["maminfo"], cores=data["cores"])
+        return render_template("admin.html", user=current_user, coretemps=data["temps"], temp_avg=data["temp_avg"], meminfo=data["meminfo"], cores=data["cores"])
     else:
         flash("You do not have permission to access this page.", category="error")
         return redirect(url_for("auth.login"))
