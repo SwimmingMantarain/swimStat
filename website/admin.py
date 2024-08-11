@@ -87,7 +87,7 @@ def getDiagnostics() -> dict:
     meminfo = [mem_total, mem_free + mem_buffers + mem_cached, mem_free]
 
     return {
-        "temps": temps,
+        "temps": [float(temp) for temp in temps],
         "temp_avg": temp_avg,
         "meminfo": meminfo,
         "cores": cores
