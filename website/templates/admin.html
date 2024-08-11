@@ -1,33 +1,72 @@
 {% extends "base.html" %} {% block title %}Admin - AquaMetrics{% endblock %} {%
 block content %}
+<link
+	rel="stylesheet"
+	href="{{ url_for('static', filename='css/admin.css')}}"
+/>
 <div class="card mb-4">
-  <div class="card-header">Admin</div>
-  <div class="card-body">
-    <div class="container mt-5">
-      <h3>Send an Email with LocalTunnel Link</h3>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-      >
-      </button>
-      <form action="{{ url_for('admin.emails') }}" method="post">
-        <div class="form-group">
-          <label for="recipients">Recipients (comma-separated):</label>
-          <input
-            type="text"
-            class="form-control"
-            id="recipients"
-            name="recipients"
-          />
-        </div>
-        <button type="submit" class="btn btn-primary">Send Email</button>
-      </form>
-      <br />
-      <button type="button" class="btn btn-primary" onclick="killTunnel()">Kill Current Tunnel</button>
-    </div>
-  </div>
+	<div class="card-header">Admin</div>
+	<div class="card-body">
+		<div class="container mt-5">
+			<h1>Send an Email with LocalTunnel Link</h1>
+			<button
+				type="button"
+				class="close"
+				data-dismiss="alert"
+				aria-label="Close"
+			></button>
+			<form action="{{ url_for('admin.emails') }}" method="post">
+				<div class="form-group">
+					<label for="recipients"
+						>Recipients (comma-separated):</label
+					>
+					<input
+						type="text"
+						class="form-control"
+						id="recipients"
+						name="recipients"
+					/>
+				</div>
+				<button type="submit" class="btn btn-primary">
+					Send Email
+				</button>
+			</form>
+		</div>
+		<br />
+		<div class="container mt-5" id="system-diagnostics">
+			<div class="container mt-5" id="diagnostics-block">
+				<h1>CPU Tempurature</h1>
+				{% for coretemp in coretemps %}
+				<p>Core {{ loop.index - 1 }}: +{{ coretemp }}°C</p>
+				{% endfor %}
+			</div>
+      <div class="container mt-5" id="diagnostics-block">
+        <h1>CPU Core Usage</h1>
+        {% for core in cores %}
+        {% if core > 1000 %}
+        <p>Core {{ loop.index -1 }}: {{ (core / 1000.0)|round(2) }} GHz</p>
+        {% else %}
+        <p>Core {{ loop.index -1 }}: {{ core|round(2) }} MHz</p>
+        {% endif %}
+        {% endfor %}
+      </div>
+			<div class="container mt-5" id="diagnostics-block">
+				<h1>CPU Averages</h1>
+				<p id="temp-avg">{{ coretemps|length }} Cores: +{{ temp_avg }}°C</p>
+				<p id="freq-avg">Average CPU Frequency: {{ (cores|sum / cores|length|round(1)/1000.0)|round(2) }} GHz</p>
+			</div>
+			<div class="container mt-5" id="diagnostics-block">
+				<h1>Memory Usage</h1>
+				<p id="memory-usage">Memory Uasge: {{ (meminfo[0] - meminfo[1])|round(1) }}/{{ meminfo[0]|round(1) }} GB</p>
+        {% if (meminfo[2]|round(2)) < 1 %}
+          <p id="memory-available">Memory Available {{ (meminfo[2] * 1024)|round(2) }} MB</p>
+        {% else %}
+          <p id="memory-available">Memory Available {{ (meminfo[2]|round(2)) }} GB</p>
+        {% endif %}
+			</div>
+		</div>
+	</div>
 </div>
 <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 {% endblock %}
+

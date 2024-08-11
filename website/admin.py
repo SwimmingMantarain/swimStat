@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from .models import User
 from . import db
 import subprocess
+import psutil
 import re
 import smtplib
 from email.mime.text import MIMEText
@@ -38,7 +39,41 @@ def admin_page():
     Handle GET and POST requests for the admin page.
     """
     if current_user.is_admin:
-        return render_template("admin.html", user=current_user)
+        # Core Temps
+        command = "sensors | grep Core"
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        temps = []
+
+        for line in process.stdout:
+            # Tempuratures are printed like this
+            # Core 0:         36.0°C (high =  37.0°C, crit =  41.0°C)\n
+            # Core 1:         36.0°C (high =  37.0°C, crit =  41.0°C)\n
+            match = re.search(r'(\d+\.\d+)', line)
+            if match:
+                temps.append(match.group(1))
+        
+        # CPU Individual Core Usage
+        cores = []
+        command = "cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq"
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        for line in process.stdout:
+            try:
+                cores.append(float(line) / 1000)
+            except ValueError:
+                continue
+
+        # Average CPU Tempurature
+        temp_avg = sum([float(temp) for temp in temps]) / len(temps)
+
+        # Memory Usage
+        mem_total = psutil.virtual_memory().total / 1024**3  # Total memory in GB
+        mem_free = psutil.virtual_memory().available / 1024**3  # Available memory in GB
+        mem_buffers = psutil.virtual_memory().buffers / 1024**3  # Buffers in GB
+        mem_cached = psutil.virtual_memory().cached / 1024**3  # Cached memory in GB
+
+        meminfo = [mem_total, mem_free + mem_buffers + mem_cached, mem_free]
+
+        return render_template("admin.html", user=current_user, coretemps=temps, temp_avg=temp_avg, meminfo=meminfo, cores=cores)
     else:
         flash("You do not have permission to access this page.", category="error")
         return redirect(url_for("auth.login"))

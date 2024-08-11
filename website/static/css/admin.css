@@ -1,0 +1,24 @@
+h1 {
+    font-weight: bolder;
+    font-size: 24px;
+    max-width: fit-content;
+}
+
+p {
+    max-width: fit-content;
+}
+
+#system-diagnostics {
+    display:flex
+}
+#diagnostics-block {
+    align-content: flex-start !important;
+    align-items: flex-start !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    max-width: min-content !important;
+    width: min-content;
+    white-space: nowrap;
+}
+

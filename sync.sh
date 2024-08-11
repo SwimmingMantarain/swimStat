@@ -3,7 +3,7 @@
 ip="root@100.81.185.30"
 
 clear
-echo -e "\n\033[1m\033[4m\033[33mSyncing project to server... at $ip\033[0m"
+echo -e "\n\033[1m\033[4m\033[33mSyncing project to server... at "$ip"\033[0m"
 
 # Sync and replace existing files with rsync and ssh as root
 
