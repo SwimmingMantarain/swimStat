@@ -50,7 +50,7 @@ def admin_page():
     
     if current_user.is_admin:
         data = getDiagnostics()
-        return render_template("admin.html", user=current_user, coretemps=data["temps"], temp_avg=data["temp_avg"], meminfo=data["meminfo"], cores=data["cores"])
+        return render_template("admin.html", user=current_user, coretemps=data[0], temp_avg=data[2], meminfo=data[3], cores=data[1])
     else:
         flash("You do not have permission to access this page.", category="error")
         return redirect(url_for("auth.login"))
@@ -59,6 +59,7 @@ def getDiagnostics() -> dict:
     # Core Temps
     command = "sensors | grep Core"
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    data = []
     temps = []
     for line in process.stdout:
         # Tempuratures are printed like this
@@ -68,6 +69,8 @@ def getDiagnostics() -> dict:
         if match:
             temps.append(match.group(1))
     
+    data.append(temps)
+
     # CPU Individual Core Usage
     cores = []
     command = "cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq"
@@ -77,8 +80,14 @@ def getDiagnostics() -> dict:
             cores.append(float(line) / 1000)
         except ValueError: 
             continue
+    
+    data.append(cores)
+
     # Average CPU Tempurature
     temp_avg = sum([float(temp) for temp in temps]) / len(temps)
+
+    data.append(temp_avg)
+
     # Memory Usage
     mem_total = psutil.virtual_memory().total / 1024**3  # Total memory in GB
     mem_free = psutil.virtual_memory().available / 1024**3  # Available memory in GB
@@ -86,12 +95,9 @@ def getDiagnostics() -> dict:
     mem_cached = psutil.virtual_memory().cached / 1024**3  # Cached memory in GB
     meminfo = [mem_total, mem_free + mem_buffers + mem_cached, mem_free]
 
-    return {
-        "temps": [float(temp) for temp in temps],
-        "temp_avg": temp_avg,
-        "meminfo": meminfo,
-        "cores": cores
-    }
+    data.append(meminfo)
+
+    return data
 
 """
 # Function to start Serveo and capture the URL

@@ -11,7 +11,12 @@ const fetchData = () => {
     fetch('/admin', {method: 'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({"diag" : "diag"})}).then(response => {
         return response.json();
     }).then(data => {
-        const {temps, cores, temp_avg, meminfo} = data;
+        data = data[0];
+
+        const temps = data[0];
+        const cores = data[1];
+        const temp_avg = data[2];
+        const meminfo = data[3];
 
         const diagBlocks = document.querySelectorAll(
             '#system-diagnostics #diagnostics-block'
@@ -19,7 +24,10 @@ const fetchData = () => {
 
         // Temperature
         const tempBlock = diagBlocks[0];
+        // Keep the header
+        const tempHeader = tempBlock.querySelector('h1');
         tempBlock.innerHTML = '';
+        tempBlock.appendChild(tempHeader);
         temps.forEach((coretemp, index) => {
             const p = document.createElement('p');
             p.textContent = `Core ${index}: +${coretemp}°C`;
@@ -28,7 +36,10 @@ const fetchData = () => {
 
         // CPU Core Usage
         const coreUsageBlock = diagBlocks[1];
+        // Keep the header
+        const coreUsageHeader = coreUsageBlock.querySelector('h1');
         coreUsageBlock.innerHTML = '';
+        coreUsageBlock.appendChild(coreUsageHeader);
         cores.forEach((core, index) => {
             const p = document.createElement('p');
             if (core > 1000) {
@@ -52,10 +63,16 @@ const fetchData = () => {
         const memUsageBlock = diagBlocks[3];
         memUsageBlock.querySelector(
             '#memory-usage'
-        ).textContent = `Memory Usage: ${((meminfo[0] - meminfo[1]) / 1024).toFixed(1)}/${(meminfo[0] / 1024).toFixed(1)} GB`;
-        memUsageBlock.querySelector(
-            '#memory-available'
-        ).textContent = `Memory Available: ${(meminfo[2] < 1 ? (meminfo[2] * 1024).toFixed(2) : meminfo[2].toFixed(2))} MB`;
+        ).textContent = `Memory Usage: ${(meminfo[0] - meminfo[1]).toFixed(2)}/${meminfo[0].toFixed(2)} GB`;
+        if (meminfo[2] < 1) {
+            memUsageBlock.querySelector(
+                '#memory-available'
+            ).textContent = `Memory Available: ${(meminfo[2] * 1024).toFixed(2)} MB`;
+        } else {
+            memUsageBlock.querySelector(
+                '#memory-available'
+            ).textContent = `Memory Available: ${(meminfo[2]).toFixed(2)} GB`;
+        }
     });
 };
 
