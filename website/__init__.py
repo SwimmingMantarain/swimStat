@@ -1,7 +1,10 @@
+from threading import Thread
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+import subprocess
+import time
 
 # Create SQLAlchemy instance
 db = SQLAlchemy()
@@ -68,6 +71,17 @@ def create_app():
             User instance.
         """
         return User.query.get(int(id))
+
+    # Restart ssh tunnel every hour
+    def restart_tunnel():
+        while True:
+            subprocess.run(["killall", "ssh"])
+            subprocess.Popen(["ssh", "-R", "aqua-metrics:80:localhost:5000", "serveo.net"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            time.sleep(3600)
+
+    # Start tunnel restart loop in background
+    app.logger.info("Starting ssh tunnel restart loop")
+    Thread(target=restart_tunnel).start()
 
     return app
 

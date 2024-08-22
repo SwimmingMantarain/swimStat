@@ -93,32 +93,32 @@ def getDiagnostics() -> dict:
     mem_free = psutil.virtual_memory().available / 1024**3  # Available memory in GB
     mem_buffers = psutil.virtual_memory().buffers / 1024**3  # Buffers in GB
     mem_cached = psutil.virtual_memory().cached / 1024**3  # Cached memory in GB
-    meminfo = [mem_total, mem_free + mem_buffers + mem_cached, mem_free]
+    meminfo = [mem_total, mem_free + mem_buffers + mem_cached]
 
     data.append(meminfo)
 
     return data
 
-"""
-# Function to start Serveo and capture the URL
-def start_serveo():
-    # Kill any existing Serveo processes
-    subprocess.run(["killall", "ssh"])
+# Function to restart SSH connection
+@admin.route("/restart-tunnel", methods=["POST"])
+@login_required
+def restart_tunnel():
+    """
+    Handle POST requests for restarting the SSH tunnel.
+    """
+    if request.method == "POST":
+        # kill any running ssh processes with this serveo link aqua-metrics:80:localhost:(5000 or 80) serveo.net
+        subprocess.run(["killall", "ssh"])
 
-    # SSH command to start Serveo
-    command = ["ssh", "-R", "aqua-metrics:80:localhost:80", "serveo.net"]
+        # SSH command to start Serveo
+        command = ["ssh", "-R", "aqua-metrics:80:localhost:5000", "serveo.net"]
 
-    # Start Serveo and capture the output
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        # Run the SSH command
+        subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+        return jsonify({}, 200)
     
-    # Wait for Serveo to establish and capture the output
-    for line in process.stdout:
-        # Regex to capture the URL
-        match = re.search(r'(https://aqua-metrics\.serveo\.net)', line)
-        if match:
-            return match.group(0)
-    
-    return None"""
+
 
 # Function to send email
 def send_email(subject, body, recipient):
@@ -150,7 +150,6 @@ def emails():
     if request.method == "POST":
         recipients = request.form.get("recipients")
         recipients = recipients.split(",")
-        #link = start_serveo()
         for recipient in recipients:
             subject = "AquaMetrics - Regenerated Link"
             body = f"here is your link:\naqua-metrics.serveo.net"

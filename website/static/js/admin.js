@@ -1,7 +1,7 @@
-async function killTunnel() {
-    const response = await fetch("/kill-tunnel", {
+async function restartSSHConnection() {
+    const response = await fetch("/restart-tunnel", {
         method: "POST",
-        body: JSON.stringify({ user: user })
+        body: JSON.stringify({})
     }).then((_res) => {
         window.location.href = "/";
     });
@@ -63,16 +63,10 @@ const fetchData = () => {
         const memUsageBlock = diagBlocks[3];
         memUsageBlock.querySelector(
             '#memory-usage'
-        ).textContent = `Memory Usage: ${(meminfo[0] - meminfo[1]).toFixed(2)}/${meminfo[0].toFixed(2)} GB`;
-        if (meminfo[2] < 1) {
-            memUsageBlock.querySelector(
-                '#memory-available'
-            ).textContent = `Memory Available: ${(meminfo[2] * 1024).toFixed(2)} MB`;
-        } else {
-            memUsageBlock.querySelector(
-                '#memory-available'
-            ).textContent = `Memory Available: ${(meminfo[2]).toFixed(2)} GB`;
-        }
+        ).textContent = `Memory Usage: ${((meminfo[0] - meminfo[1])).toFixed(2)}/${(meminfo[0]).toFixed(2)} GB`;
+        memUsageBlock.querySelector(
+            '#memory-available'
+        ).textContent = `Memory Available: ${(meminfo[1]).toFixed(2)} GB`;
     });
 };
 

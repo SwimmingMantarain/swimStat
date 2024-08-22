@@ -8,6 +8,11 @@ p {
     max-width: fit-content;
 }
 
+hr {
+    border-color: #007BFF;
+    border-width: 3px;
+}
+
 #system-diagnostics {
     display:flex
 }
