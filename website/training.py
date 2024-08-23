@@ -3,7 +3,6 @@ from flask_login import login_required, current_user
 from .models import User, TrainingSession, BlockOfBlocks, Block
 from .views import views
 from . import db
-import json
 
 training = Blueprint("training", __name__)
 
@@ -281,3 +280,11 @@ def view_sessions():
     Handle GET requests for viewing training sessions.
     """
     return render_template("view_sessions.html", user=current_user, sessions=current_user.training_sessions)
+
+@training.route("/submit-session", methods=["GET", "POST"])
+@login_required
+def submit_session():
+    """
+    Handle GET and POST requests for submitting a training session.
+    """
+    return render_template("submit_session.html", user=current_user, sessions=current_user.training_sessions)

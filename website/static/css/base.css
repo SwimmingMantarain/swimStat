@@ -26,7 +26,7 @@ body {
 .container {
     margin: 10px !important;
     align-content: center !important;
-    max-width: 100% !important;
+    max-width: calc(100vw - 20px) !important;
 }
 
 .navbar {

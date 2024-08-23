@@ -3,6 +3,10 @@
     font-weight: bold;
 }
 
+.sessions-container {
+    align-content: center;
+}
+
 .isSetText {
     vertical-align:top;
     padding-left: 5px;
