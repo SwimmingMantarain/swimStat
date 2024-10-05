@@ -1,6 +1,6 @@
-# Swim Stats
+# Aqua Metrics
 
-Swim Stats is a web application designed to help swimmers track their progress and plan their training sessions.
+Aqua Metrics is a web application designed to help swimmers track their progress and plan their training sessions.
 
 ## Features
 
