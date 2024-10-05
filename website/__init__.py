@@ -61,38 +61,12 @@ def create_app():
     # Load user by ID
     @login_manager.user_loader
     def load_user(id):
-        """
-        Load user by ID.
-
-        Args:
-            id (int): User ID.
-
-        Returns:
-            User instance.
-        """
         return User.query.get(int(id))
-
-    # Restart ssh tunnel every hour
-    def restart_tunnel():
-        while True:
-            subprocess.run(["killall", "ssh"])
-            subprocess.Popen(["ssh", "-R", "aqua-metrics:80:localhost:5000", "serveo.net"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            time.sleep(3600)
-
-    # Start tunnel restart loop in background
-    app.logger.info("Starting ssh tunnel restart loop")
-    Thread(target=restart_tunnel).start()
 
     return app
 
 
 def create_database(app):
-    """
-    Create database if it doesn't exist.
-
-    Args:
-        app (Flask app instance): Flask app instance.
-    """
     # Check if database file exists
     if not path.exists("website/" + DB_NAME):
         # Create tables in database
