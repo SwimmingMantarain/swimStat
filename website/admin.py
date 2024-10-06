@@ -27,17 +27,7 @@ def startup_tasks():
 @admin.route("/admin", methods=["GET", "POST"])
 @login_required
 def admin_page():
-    if request.method == "POST":
-        data = request.get_data()
-        if data:
-            data = data.decode()
-            data = re.sub(r'(\w+):', r'"\1":', data)
-            data = json.loads(data)
-            if data["diag"]:
-                return jsonify(getDiagnostics(), 200)
-    
     if current_user.is_admin:
-        data = getDiagnostics()
         return render_template("admin.html", user=current_user, coretemps=data[0], temp_avg=data[2], meminfo=data[3], cores=data[1])
     else:
         flash("You do not have permission to access this page.", category="error")
